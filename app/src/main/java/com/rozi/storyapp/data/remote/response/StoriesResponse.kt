@@ -5,45 +5,35 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 data class StoriesResponse(
-	val listStory: List<ListStoryItem>,
-	val error: Boolean? = null,
-	val message: String? = null
+	@SerializedName("error")
+	val error: Boolean,
+	@SerializedName("message")
+	val message: String,
+	@SerializedName("listStory")
+	val listStory: List<ListStoryItem>
 )
-
-//data class ListStoryItem(
-//	val photoUrl: String? = null,
-//	val createdAt: String? = null,
-//	val name: String? = null,
-//	val description: String? = null,
-//	val lon: Double? = null,
-//	val id: String? = null,
-//	val lat: Double? = null
-//)
-
-@Entity(tableName = "story")
 data class ListStoryItem(
-	@PrimaryKey
 	@field:SerializedName("id")
 	val id: String,
 
 	@field:SerializedName("photoUrl")
-	val photoUrl: String? = null,
+	val photoUrl: String,
 
 	@field:SerializedName("createdAt")
-	val createdAt: String? = null,
+	val createdAt: String,
 
 	@field:SerializedName("name")
-	val name: String? = null,
+	val name: String,
 
 	@field:SerializedName("description")
-	val description: String? = null,
+	val description: String,
 
 //    @ColumnInfo(defaultValue = "30.8")
 	@field:SerializedName("lon")
-	val lon: Double? = null,
+	val lon: Double,
 
 //    @ColumnInfo(defaultValue = "30.8")
 	@field:SerializedName("lat")
-	val lat: Double? = null,
+	val lat: Double,
 )
 

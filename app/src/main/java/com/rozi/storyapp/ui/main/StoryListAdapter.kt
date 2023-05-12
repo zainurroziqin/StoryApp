@@ -6,16 +6,17 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.rozi.storyapp.data.lokal.database.StoryEntity
 //import com.rozi.storyapp.data.lokal.database.StoryResponseItem
 import com.rozi.storyapp.data.remote.response.ListStoryItem
 import com.rozi.storyapp.databinding.ItemStoryBinding
 
-class StoryListAdapter : PagingDataAdapter<ListStoryItem, StoryListAdapter.MyViewHolder>(DIFF_CALLBACK) {
+class StoryListAdapter : PagingDataAdapter<StoryEntity, StoryListAdapter.MyViewHolder>(DIFF_CALLBACK) {
 
 
     class MyViewHolder(private val binding: ItemStoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: ListStoryItem) {
+        fun bind(data: StoryEntity) {
             val name = data.name
             val description = data.description
             val image = data.photoUrl
@@ -28,17 +29,17 @@ class StoryListAdapter : PagingDataAdapter<ListStoryItem, StoryListAdapter.MyVie
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListStoryItem>() {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<StoryEntity>() {
             override fun areItemsTheSame(
-                oldItem: ListStoryItem,
-                newItem: ListStoryItem
+                oldItem: StoryEntity,
+                newItem: StoryEntity
             ): Boolean {
                 return oldItem == newItem
             }
 
             override fun areContentsTheSame(
-                oldItem: ListStoryItem,
-                newItem: ListStoryItem
+                oldItem: StoryEntity,
+                newItem: StoryEntity
             ): Boolean {
                 return oldItem.id == newItem.id
             }

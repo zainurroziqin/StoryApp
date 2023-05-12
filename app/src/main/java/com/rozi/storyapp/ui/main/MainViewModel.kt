@@ -10,8 +10,8 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.rozi.storyapp.data.StoryRepository
 import com.rozi.storyapp.data.lokal.TokenPreferences
+import com.rozi.storyapp.data.lokal.database.StoryEntity
 import com.rozi.storyapp.data.remote.response.ListStoryItem
-//import com.rozi.storyapp.data.remote.response.StoriesResponse
 import com.rozi.storyapp.data.remote.retrofit.ApiConfig
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,7 +19,7 @@ import retrofit2.Response
 
 class MainViewModel(private val storyRepository: StoryRepository) : ViewModel() {
 
-    val story: LiveData<PagingData<ListStoryItem>> = storyRepository.getStory().cachedIn(viewModelScope)
+    val story: LiveData<PagingData<StoryEntity>> = storyRepository.getStory().cachedIn(viewModelScope)
 
     private val _listStory = MutableLiveData<List<ListStoryItem>>()
     val listStory: LiveData<List<ListStoryItem>> = _listStory
@@ -30,11 +30,7 @@ class MainViewModel(private val storyRepository: StoryRepository) : ViewModel() 
     private val _success = MutableLiveData<Boolean>()
     val success: LiveData<Boolean> = _success
 
-//    private val preferences = TokenPreferences(application)
 
-//    init {
-//        getListStory()
-//    }
 
 //     fun getListStory() {
 //        _isLoading.value = true

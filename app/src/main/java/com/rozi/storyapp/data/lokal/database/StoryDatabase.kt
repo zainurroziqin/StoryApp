@@ -4,13 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.rozi.storyapp.data.remote.response.ListStoryItem
 
 
 @Database(
-    entities = [ListStoryItem::class, RemoteKeys::class],
-    version = 2,
-    exportSchema = false
+    entities = [StoryEntity::class, RemoteKeys::class],
+    version = 1,
+    exportSchema = true
 )
 
 abstract class StoryDatabase : RoomDatabase(){

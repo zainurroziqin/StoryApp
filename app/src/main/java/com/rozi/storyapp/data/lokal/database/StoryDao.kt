@@ -5,16 +5,15 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.rozi.storyapp.data.remote.response.ListStoryItem
 
 @Dao
 interface StoryDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertStory(story: List<ListStoryItem>)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertStory(vararg: StoryEntity)
 
-    @Query("SELECT * FROM story")
-    fun getAllStory(): PagingSource<Int, ListStoryItem>
+    @Query("SELECT * FROM tbl_story")
+    fun getAllStory(): PagingSource<Int, StoryEntity>
 
-    @Query("DELETE FROM story")
+    @Query("DELETE FROM tbl_story")
     suspend fun deleteAll()
 }
