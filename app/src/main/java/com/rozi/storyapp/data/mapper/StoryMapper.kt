@@ -1,4 +1,4 @@
-package com.rozi.storyapp.data.Mapper
+package com.rozi.storyapp.data.mapper
 
 import com.rozi.storyapp.data.lokal.database.StoryEntity
 import com.rozi.storyapp.data.remote.response.ListStoryItem

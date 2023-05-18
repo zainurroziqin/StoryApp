@@ -27,11 +27,13 @@ class AddstoryViewModel(application: Application) : ViewModel() {
 
     private val mTokenPreferences = TokenPreferences(application)
 
-    fun addStory(filePhoto: File, desc: String) {
+    fun addStory(filePhoto: File, desc: String, lat: String?, lon : String?) {
         _isLoading.value = true
         val file = reduceFileImage(filePhoto)
         val description = desc.toRequestBody("text/plain".toMediaType())
         val requestImageFile = file.asRequestBody("image/jpeg".toMediaType())
+        val latitude =lat?.toRequestBody("text/plain".toMediaType())
+        val longtitude =lon?.toRequestBody("text/plain".toMediaType())
         val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
             "photo",
             file.name,
@@ -39,7 +41,7 @@ class AddstoryViewModel(application: Application) : ViewModel() {
         )
         val apiService = ApiConfig.getApiService()
         val token = "Bearer ${mTokenPreferences.getToken()}"
-        val uploadImageRequest = apiService.uploadImage(token,imageMultipart, description)
+        val uploadImageRequest = apiService.uploadImage(token,imageMultipart, description, latitude, longtitude)
         uploadImageRequest.enqueue(object : Callback<AddstoryResponse> {
             override fun onResponse(
                 call: Call<AddstoryResponse>,

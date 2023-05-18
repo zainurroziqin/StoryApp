@@ -1,11 +1,10 @@
-@file:Suppress("unused", "unused")
-
 package com.rozi.storyapp.ui.addstory
 
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -16,6 +15,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.rozi.storyapp.R
 import com.rozi.storyapp.databinding.ActivityAddstoryBinding
 import com.rozi.storyapp.utils.ViewModelFactory
@@ -24,10 +25,11 @@ import com.rozi.storyapp.utils.uriToFile
 import java.io.File
 
 
-@Suppress("unused", "unused")
 class AddstoryActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddstoryBinding
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var currentLocation: Location? = null
     private var getFile: File? = null
     private val addstoryViewModel: AddstoryViewModel by viewModels {
         ViewModelFactory.getInstance(
@@ -69,6 +71,16 @@ class AddstoryActivity : AppCompatActivity() {
 
         supportActionBar?.title = getString(R.string.add_story)
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        binding.switch1.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked){
+                getMyLocation()
+            }else{
+                currentLocation = null
+            }
+        }
+
         addstoryViewModel.isLoading.observe(this) {
             showLoading(it)
         }
@@ -84,6 +96,46 @@ class AddstoryActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            when {
+                permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false -> {
+                    getMyLocation()
+                }
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false -> {
+                    getMyLocation()
+                }
+            }
+        }
+
+    private fun checkPermission(permission: String): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun getMyLocation() {
+        if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
+            checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+        ) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    currentLocation = location
+                }
+            }
+        } else {
+            requestPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
     }
 
     private fun startGallery() {
@@ -139,7 +191,13 @@ class AddstoryActivity : AppCompatActivity() {
 
     private fun uploadImage() {
         if (getFile != null) {
-            addstoryViewModel.addStory(getFile!!, binding.edtDescription.text.toString())
+            var lat : String? = null
+            var lon : String?  = null
+            if (currentLocation != null) {
+                lat = currentLocation?.latitude.toString()
+                lon = currentLocation?.longitude.toString()
+            }
+            addstoryViewModel.addStory(getFile!!, binding.edtDescription.text.toString(), lat, lon)
         } else {
             Toast.makeText(
                 this@AddstoryActivity,
@@ -158,12 +216,12 @@ class AddstoryActivity : AppCompatActivity() {
     }
 
     private fun resultUpload(success: Boolean) {
-        if(success){
+        if (success) {
             Toast.makeText(this, getString(R.string.upload_berhasil), Toast.LENGTH_SHORT).show()
             val returnIntent = Intent()
             setResult(RESULT_OK, returnIntent)
             finish()
-        }else{
+        } else {
             Toast.makeText(this, R.string.upload_gagal, Toast.LENGTH_SHORT).show()
         }
     }

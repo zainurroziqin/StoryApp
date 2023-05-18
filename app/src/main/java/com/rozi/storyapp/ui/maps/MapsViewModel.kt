@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.rozi.storyapp.data.lokal.TokenPreferences
 import com.rozi.storyapp.data.remote.response.ListMapsItem
-import com.rozi.storyapp.data.remote.response.ListStoryItem
 import com.rozi.storyapp.data.remote.response.MapsResponse
 import com.rozi.storyapp.data.remote.retrofit.ApiConfig
 import retrofit2.Call
