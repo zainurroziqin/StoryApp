@@ -28,11 +28,9 @@ data class ListStoryItem(
 	@field:SerializedName("description")
 	val description: String,
 
-//    @ColumnInfo(defaultValue = "30.8")
 	@field:SerializedName("lon")
 	val lon: Double,
 
-//    @ColumnInfo(defaultValue = "30.8")
 	@field:SerializedName("lat")
 	val lat: Double,
 )
